@@ -1,7 +1,7 @@
 {
-	"name": "Scramjet Demo",
-	"description": "Scramjet Demo App",
-	"repository": "https://github.com/.../Scramjet-Demo",
-	"logo": "https://raw.githubusercontent.com/MercuryWorkshop/scramjet/main/assets/scramjet.png",
-	"keywords": ["scramjet"]
+	"name": "serotonin",
+	"description": "serotonin browser",
+	"repository": "https://github.com/floams/serotonin",
+	"logo": "/public/ser.png",
+	"keywords": ["scramjet, serotonin"]
 }

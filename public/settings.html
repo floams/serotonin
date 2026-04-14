@@ -1,0 +1,343 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>serotonin | settings</title>
+    <link rel="shortcut icon" content="favicon.webp" />
+    <style>
+        @font-face {
+            font-family: 'AwesomeBipolar';
+            src: url('AwesomeBi_polar-Regular.ttf') format('truetype');
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            background: #1e1e1e url('bg.png') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'AwesomeBipolar', Arial, sans-serif;
+            color: #e8e8e8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            position: fixed; top: 0; left: 0; right: 0; height: 52px;
+            background: rgba(30, 30, 30, 0.9); backdrop-filter: blur(10px);
+            border-bottom: 1px solid #333; display: flex; align-items: center;
+            padding: 0 16px; z-index: 1000;
+        }
+        .back-link { color: #aaa; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
+        .back-link:hover { color: #fff; }
+
+        /* Settings Card */
+        .settings-card {
+            width: 90%; max-width: 650px;
+            background: rgba(15, 15, 15, 0.85); backdrop-filter: blur(15px);
+            border: 1px solid #333; border-radius: 12px;
+            overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            margin-bottom: 40px;
+        }
+
+        /* Tabs Navigation */
+        .tab-nav {
+            display: flex; background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid #333;
+        }
+        .tab-btn {
+            flex: 1; padding: 15px; border: none; background: none;
+            color: #888; cursor: pointer; font-family: 'AwesomeBipolar';
+            transition: 0.2s; border-bottom: 2px solid transparent;
+        }
+        .tab-btn.active { color: #fff; border-bottom: 2px solid #fff; background: rgba(255,255,255,0.05); }
+
+        /* Content Area */
+        .tab-content { padding: 30px; display: none; min-height: 350px; }
+        .tab-content.active { display: block; }
+
+        .section-title { font-size: 1.2rem; margin-bottom: 20px; color: #fff; border-left: 4px solid #555; padding-left: 10px; }
+        .input-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 0.9rem; color: #aaa; font-family: Arial; }
+        
+        select, input {
+            background: #252525; border: 1px solid #444; border-radius: 6px;
+            padding: 10px; color: #fff; outline: none; font-family: Arial;
+        }
+        input:focus { border-color: #777; }
+
+        .btn {
+            background: #e8e8e8; color: #111; border: none; padding: 12px;
+            border-radius: 6px; cursor: pointer; font-family: 'AwesomeBipolar';
+            width: 100%; transition: 0.2s; margin-top: 10px;
+        }
+        .btn:hover { background: #fff; transform: translateY(-2px); }
+        .btn-cloak { background: #3a3a3a; color: #fff; margin-top: 5px; }
+        
+        /* New Red Style for Logout */
+        .btn-danger { background: #ff4d4d; color: #fff; margin-top: 15px; }
+        .btn-danger:hover { background: #ff6666; }
+
+        .timer-display {
+            font-size: 2.5rem; text-align: center; margin: 10px 0;
+            color: #fff; letter-spacing: 2px;
+        }
+        .user-stat {
+            display: flex; justify-content: space-between;
+            padding: 10px; background: rgba(255,255,255,0.03);
+            border-radius: 6px; margin-bottom: 5px; font-family: Arial; font-size: 0.85rem;
+        }
+
+        #panicKeyInput { 
+            text-align: center; font-weight: bold; cursor: pointer; 
+            border: 2px dashed #444; background: #1a1a1a;
+        }
+        #panicKeyInput:focus { border-color: #ff4d4d; color: #ff4d4d; }
+
+    </style>
+</head>
+<body>
+
+    <div class="toolbar">
+        <a href="index.html" class="back-link">← back to serotonin</a>
+    </div>
+
+    <div class="settings-card">
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="openTab(event, 'general')">General</button>
+            <button class="tab-btn" onclick="openTab(event, 'appearance')">Tab Cloak</button>
+            <button class="tab-btn" onclick="openTab(event, 'advanced')">Advanced</button>
+            <button class="tab-btn" onclick="openTab(event, 'user')">User</button>
+        </div>
+
+        <!-- General Tab -->
+        <div id="general" class="tab-content active">
+            <div class="section-title">Search Engine</div>
+            <div class="input-group">
+                <label>Choose your default engine:</label>
+                <select id="searchEngine">
+                    <option value="https://www.google.com/search?q=%s">Google</option>
+                    <option value="https://www.bing.com/search?q=%s">Bing</option>
+                    <option value="https://duckduckgo.com/?q=%s">DuckDuckGo</option>
+                    <option value="https://search.brave.com/search?q=%s">Brave</option>
+                </select>
+            </div>
+            
+            <div class="section-title">Panic Key</div>
+            <div class="input-group">
+                <label>Press key to redirect to Google:</label>
+                <input type="text" id="panicKeyInput" placeholder="Click to record..." readonly />
+                <label style="font-size: 0.7rem;">Redirect URL:</label>
+                <input type="text" id="panicUrl" placeholder="https://google.com" />
+            </div>
+        </div>
+
+        <!-- Tab Cloaking Tab -->
+        <div id="appearance" class="tab-content">
+            <div class="section-title">Visual Cloak</div>
+            <div class="input-group">
+                <label>Presets:</label>
+                <select id="cloakPreset" onchange="applyPreset(this.value)">
+                    <option value="serotonin">Serotonin (Default)</option>
+                    <option value="google">Google</option>
+                    <option value="drive">Google Drive</option>
+                    <option value="classroom">Google Classroom</option>
+                    <option value="canvas">Canvas</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Custom Title:</label>
+                <input type="text" id="customTitle" placeholder="serotonin" />
+            </div>
+            <div class="input-group">
+                <label>Custom Favicon URL:</label>
+                <input type="text" id="customFavicon" placeholder="favicon.webp" />
+            </div>
+            <button class="btn btn-cloak" onclick="previewCloak()">Apply Visuals</button>
+        </div>
+
+        <!-- Advanced Tab -->
+        <div id="advanced" class="tab-content">
+            <div class="section-title">Stealth Mode</div>
+            <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">
+                Open Serotonin inside a hidden tab so it doesn't show in your browser history.
+            </p>
+            <button class="btn btn-cloak" onclick="cloakAB()">Open in About:Blank</button>
+            <button class="btn btn-cloak" onclick="cloakBlob()">Open in Blob URL</button>
+            
+            <div class="input-group" style="margin-top:20px;">
+                <label>Auto-Cloak on startup:</label>
+                <select id="autoCloak">
+                    <option value="false">Off</option>
+                    <option value="ab">Auto About:Blank</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- NEW USER TAB -->
+        <div id="user" class="tab-content">
+            <div class="section-title">Current Session</div>
+            <p style="font-size: 0.8rem; color: #888; margin-bottom: 10px;">Time until automatic lockout:</p>
+            <div class="timer-display" id="sessionTimer">00:00:00</div>
+            
+            <div class="user-stat">
+                <span>Session Started:</span>
+                <span id="sessionStart">Loading...</span>
+            </div>
+            <div class="user-stat">
+                <span>Security Level:</span>
+                <span>Local Encrypted</span>
+            </div>
+
+            <button class="btn btn-cloak" style="margin-top: 20px;" onclick="extendSession()">Extend Session (Reset to 5h)</button>
+            
+            <div class="section-title" style="margin-top:30px;">Privacy Actions</div>
+            <p style="font-size: 0.8rem; color: #888;">Logging out will clear your current local session and return you to the password screen.</p>
+            <button class="btn btn-danger" onclick="logout()">Logout & Lock Site</button>
+        </div>
+
+        <div style="padding: 0 30px 30px;">
+            <button class="btn" onclick="saveAll()">Save Changes</button>
+        </div>
+    </div>
+
+    <script>
+        // Tab System
+        function openTab(evt, tabName) {
+            let contents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
+            let buttons = document.getElementsByClassName("tab-btn");
+            for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove("active");
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Session Management
+        function updateTimer() {
+            const lastLogin = parseInt(localStorage.getItem('lastLoginTime'));
+            if (!lastLogin) return;
+
+            const now = Date.now();
+            const fiveHours = 5 * 60 * 60 * 1000;
+            const expiry = lastLogin + fiveHours;
+            const timeLeft = expiry - now;
+
+            if (timeLeft <= 0) {
+                logout();
+                return;
+            }
+
+            const h = Math.floor(timeLeft / (1000 * 60 * 60));
+            const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById('sessionTimer').innerText = 
+                `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            
+            // Format start time
+            const startDate = new Date(lastLogin);
+            document.getElementById('sessionStart').innerText = startDate.toLocaleTimeString();
+        }
+
+        function extendSession() {
+            localStorage.setItem('lastLoginTime', Date.now().toString());
+            alert("Session reset to 5 hours.");
+            updateTimer();
+        }
+
+        function logout() {
+            localStorage.removeItem('lastLoginTime');
+            window.location.href = 'index.html';
+        }
+
+        // Set interval for timer
+        setInterval(updateTimer, 1000);
+
+        // Panic Key Recorder
+        const panicInput = document.getElementById('panicKeyInput');
+        panicInput.addEventListener('focus', () => panicInput.value = "Recording...");
+        panicInput.addEventListener('keydown', (e) => {
+            e.preventDefault();
+            if (e.key === "Tab") return;
+            panicInput.value = e.key;
+            panicInput.blur();
+        });
+
+        // Presets Logic
+        function applyPreset(val) {
+            const presets = {
+                google: { t: "Google", i: "https://www.google.com/favicon.ico" },
+                drive: { t: "My Drive - Google Drive", i: "https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png" },
+                classroom: { t: "Classes", i: "https://www.gstatic.com/classroom/favicon.png" },
+                canvas: { t: "Dashboard", i: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" }
+            };
+
+            if (val === 'serotonin') {
+                document.getElementById('customTitle').value = "";
+                document.getElementById('customFavicon').value = "";
+            } else if (presets[val]) {
+                document.getElementById('customTitle').value = presets[val].t;
+                document.getElementById('customFavicon').value = presets[val].i;
+            }
+        }
+
+        // About:Blank Cloaking
+        function cloakAB() {
+            const win = window.open();
+            if (!win) return alert("Please allow popups!");
+            win.document.body.style.margin = '0';
+            win.document.body.style.height = '100vh';
+            const iframe = win.document.createElement('iframe');
+            iframe.style.border = 'none'; iframe.style.width = '100%'; iframe.style.height = '100%';
+            iframe.src = window.location.origin;
+            win.document.body.appendChild(iframe);
+            window.location.replace("https://google.com");
+        }
+
+        // Blob Cloaking
+        function cloakBlob() {
+            const html = `
+                <title>${localStorage.getItem('tabTitle') || 'serotonin'}</title>
+                <link rel="icon" href="${localStorage.getItem('tabIcon') || 'favicon.webp'}">
+                <style>body,html{margin:0;padding:0;height:100%;overflow:hidden;}iframe{width:100%;height:100%;border:none;}</style>
+                <iframe src="${window.location.origin}"></iframe>
+            `;
+            const blob = new Blob([html], { type: 'text/html' });
+            window.location.href = URL.createObjectURL(blob);
+        }
+
+        function previewCloak() {
+            const t = document.getElementById('customTitle').value || "serotonin";
+            const i = document.getElementById('customFavicon').value || "favicon.webp";
+            document.title = t;
+            let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.type = 'image/x-icon'; link.rel = 'shortcut icon'; link.href = i;
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+
+        function saveAll() {
+            localStorage.setItem('searchEngine', document.getElementById('searchEngine').value);
+            localStorage.setItem('panicKey', document.getElementById('panicKeyInput').value);
+            localStorage.setItem('panicUrl', document.getElementById('panicUrl').value || 'https://google.com');
+            localStorage.setItem('tabTitle', document.getElementById('customTitle').value);
+            localStorage.setItem('tabIcon', document.getElementById('customFavicon').value);
+            localStorage.setItem('autoCloak', document.getElementById('autoCloak').value);
+            alert('Settings Saved!');
+        }
+
+        window.onload = () => {
+            document.getElementById('searchEngine').value = localStorage.getItem('searchEngine') || "https://www.google.com/search?q=%s";
+            document.getElementById('panicKeyInput').value = localStorage.getItem('panicKey') || "";
+            document.getElementById('panicUrl').value = localStorage.getItem('panicUrl') || "https://google.com";
+            document.getElementById('customTitle').value = localStorage.getItem('tabTitle') || "";
+            document.getElementById('customFavicon').value = localStorage.getItem('tabIcon') || "";
+            document.getElementById('autoCloak').value = localStorage.getItem('autoCloak') || "false";
+            updateTimer();
+        };
+    </script>
+</body>
+</html>
