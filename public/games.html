@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
     <title>serotonin | games</title>
 
-    <link rel="shortcut icon" content="favicon.webp" />
+    <link rel="shortcut icon" href="favicon.webp" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
@@ -15,16 +15,14 @@
 
         body {
             min-height: 100vh;
-            background-image: url('bg.png');
+            background: #1e1e1e url('bg.png') no-repeat center center fixed;
             background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-color: #1e1e1e;
-            font-family: 'AwesomeBipolar', cursive;
+            font-family: 'AwesomeBipolar', cursive, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 100px;
+            padding-top: 120px;
+            color: white;
             overflow-x: hidden;
         }
 
@@ -36,7 +34,7 @@
         }
         .nav-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
         .nav-btn:hover { transform: scale(1.1); }
-        .nav-logo { width: 32px; height: 32px; border-radius: 50%; }
+        .nav-logo { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
 
         .page-content {
             text-align: center; width: 100%; max-width: 1100px; padding: 20px;
@@ -46,20 +44,19 @@
         #games {
             width: 100%;
             margin-top: 20px;
+            min-height: 600px;
         }
 
         .desc {
-            font-family: Arial; 
+            font-family: Arial, sans-serif; 
             font-size: 1.4rem; 
-            color: rgba(255, 255, 255, 0.4); /* Reduced opacity for that "aesthetic" look */
+            color: rgba(255, 255, 255, 0.4);
             margin-bottom: 40px; 
             font-weight: 300; 
         }
     </style>
 
-    <script src="/scram/scramjet.all.js"></script>
-    <script src="/baremux/index.js"></script>
-    <script src="register-sw.js" defer></script>
+    <!-- UI Scripts only -->
     <script src="search.js" defer></script>
     <script src="index.js" defer></script>
 </head>
@@ -80,28 +77,31 @@
         <div id="games"></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/gh/luminsdk/script@latest/lumin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/luminsdk/script@latest/lumin.min.js" crossorigin="anonymous"></script>
     <script>
+        // Init Lumin
         Lumin.init({
-  container: '#games',
-  theme: 'dark',
-  columns: 12,
-  rows: 8,
-  gamesPerPage: 96,
-  showCatagories: true,
-  showRandom: false,
-});
+            container: '#games',
+            theme: 'dark',
+            columns: 12,
+            rows: 8,
+            gamesPerPage: 96,
+            showCatagories: true,
+            showRandom: false,
+        });
 
         function go(url) {
             window.location.href = 'iframe.html?url=' + encodeURIComponent(url);
         }
 
+        // Tab Cloaking
         const savedTitle = localStorage.getItem('tabTitle');
         const savedIcon = localStorage.getItem('tabIcon');
         if (savedTitle) document.title = savedTitle;
         if (savedIcon) {
             let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-            link.href = savedIcon; document.head.appendChild(link);
+            link.href = savedIcon; 
+            document.head.appendChild(link);
         }
     </script>
 </body>

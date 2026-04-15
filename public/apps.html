@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>serotonin | apps</title>
+
+    <link rel="shortcut icon" content="favicon.webp" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        @font-face { font-family: 'AwesomeBipolar'; src: url('AwesomeBi_polar-Regular.ttf') format('truetype'); }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            background-image: url('bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: #1e1e1e;
+            font-family: 'AwesomeBipolar', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 100px;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION PILL --- */
+        .nav-pill {
+            position: fixed; top: 30px; display: flex; align-items: center;
+            background: #000; padding: 10px 25px; border-radius: 50px; gap: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000;
+            border: 1px solid #111;
+        }
+        .nav-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
+        .nav-btn:hover { transform: scale(1.1); }
+        .nav-logo { width: 32px; height: 32px; border-radius: 50%; }
+
+        /* --- HEADER --- */
+        .page-content {
+            text-align: center; width: 100%; max-width: 1200px; padding: 20px;
+        }
+        .site-title { font-size: 5rem; color: #fff; margin-bottom: 5px; }
+        .app-count { 
+            font-family: Arial; font-size: 1.2rem; 
+            color: rgba(255, 255, 255, 0.3); /* Themed low opacity */
+            margin-bottom: 50px; font-weight: 300; 
+        }
+
+        /* --- 7-COLUMN GRID (Matches Screenshot) --- */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .app-card {
+            aspect-ratio: 1 / 1;
+            background: #111; /* Dark tiles as seen in screenshot */
+            border-radius: 12px; /* Slightly less rounded for the app look */
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #1a1a1a;
+        }
+
+        .app-card img {
+            width: 70%;
+            height: 70%;
+            object-fit: contain;
+            transition: opacity 0.3s;
+            filter: grayscale(0.2);
+        }
+
+        .app-card:hover { 
+            transform: scale(1.05); 
+            background: #1a1a1a;
+            border-color: #333;
+        }
+
+        .app-name {
+            position: absolute;
+            bottom: 10px;
+            color: #fff;
+            font-family: Arial;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .app-card:hover .app-name { opacity: 0.6; }
+
+        /* Responsive */
+        @media (max-width: 1000px) { .apps-grid { grid-template-columns: repeat(5, 1fr); } }
+        @media (max-width: 700px) { .apps-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="nav-pill">
+        <a href="index.html" class="nav-btn"><img src="ser.png" class="nav-logo"></a>
+        <a href="games.html" class="nav-btn"><i class="fa-solid fa-gamepad"></i></a>
+        <a href="apps.html" class="nav-btn"><i class="fa-solid fa-table-cells"></i></a>
+        <button class="nav-btn" onclick="go('https://indica.bond/')"><i class="fa-solid fa-film"></i></button>
+        <button class="nav-btn" onclick="go('https://monochrome.tf')"><i class="fa-solid fa-music"></i></button>
+        <a href="settings.html" class="nav-btn"><i class="fa-solid fa-gear"></i></a>
+    </div>
+
+    <div class="page-content">
+        <h1 class="site-title">apps</h1>
+        <p class="app-count" id="app-counter">browser from over [appamount] apps!</p>
+
+        <div class="apps-grid" id="app-grid">
+            <!-- Apps will be injected here -->
+        </div>
+    </div>
+
+    <script>
+        // --- EDITABLE APPS DATABASE ---
+        // You can link to an internal file (e.g., 'discord.html') 
+        // OR a full website (e.g., 'https://discord.com')
+        const apps = [
+            { name: "YouTube",  icon: "apps/youtube.png",  url: "https://youtube.com" },
+            { name: "Twitch",   icon: "apps/twitch.png",   url: "https://twitch.tv" },
+            { name: "Discord",  icon: "apps/discord.png",  url: "https://discord.com" },
+            { name: "TikTok",   icon: "apps/tiktok.png",   url: "https://tiktok.com" },
+            { name: "FMHY",     icon: "apps/fmhy.png",  url: "https://fmhy.net" },
+            { name: "Google",   icon: "apps/google.png",   url: "https://google.com" },
+            { name: "DuckDuckGo", icon: "apps/ddg.png",   url: "https://start.duckduckgo.com/" },
+            { name: "Reddit",   icon: "apps/reddit.png",   url: "https://reddit.com" },
+            { name: "GitHub",   icon: "apps/github.png",   url: "https://github.com" },
+        ];
+
+        function renderApps() {
+            const grid = document.getElementById('app-grid');
+            const counter = document.getElementById('app-counter');
+            
+            grid.innerHTML = '';
+            counter.innerText = `browser from over ${apps.length} apps!`;
+
+            apps.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'app-card';
+                card.onclick = () => go(app.url);
+
+                card.innerHTML = `
+                    <img src="${app.icon}" onerror="this.src='ser.png'; this.style.opacity='0.2';">
+                    <div class="app-name">${app.name}</div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function go(url) {
+            // Uses your standard iframe/proxy logic
+            window.location.href = 'iframe.html?url=' + encodeURIComponent(url);
+        }
+
+        renderApps();
+
+        // Tab Cloaking
+        const savedTitle = localStorage.getItem('tabTitle');
+        const savedIcon = localStorage.getItem('tabIcon');
+        if (savedTitle) document.title = savedTitle;
+        if (savedIcon) {
+            let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.href = savedIcon; document.head.appendChild(link);
+        }
+    </script>
+</body>
+</html>
