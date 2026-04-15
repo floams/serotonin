@@ -1,437 +1,108 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
-		<title>serotonin | games</title>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+    <title>serotonin | games</title>
 
-		<link rel="shortcut icon" content="favicon.webp" />
-		<style>
-			@font-face {
-				font-family: 'AwesomeBipolar';
-				src: url('AwesomeBi_polar-Regular.ttf') format('truetype');
-				font-weight: normal;
-				font-style: normal;
-			}
-		</style>
+    <link rel="shortcut icon" content="favicon.webp" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
-		<!-- CORE SCRIPTS (Exact same stack from index.html) -->
-		<script src="/scram/scramjet.all.js"></script>
-		<script src="/baremux/index.js"></script>
-
-		<script src="register-sw.js" defer></script>
-		<script src="search.js" defer></script>
-		<script src="index.js" defer></script>
-
-		<style>
-			* {
-				margin: 0;
-				padding: 0;
-				box-sizing: border-box;
-			}
-
-			body {
-				min-height: 100vh;
-				background-image: url('bg.png');
-				background-size: cover;
-				background-position: center;
-				background-repeat: no-repeat;
-				background-color: #1e1e1e;
-				font-family: 'AwesomeBipolar', cursive;
-				color: #e8e8e8;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: flex-start;
-				padding-top: 72px;
-				position: relative;
-			}
-
-			/* top browser toolbar */
-			.toolbar {
-				position: fixed;
-				top: 0;
-				left: 0;
-				right: 0;
-				height: 52px;
-				background: rgba(30, 30, 30, 0.92);
-				backdrop-filter: blur(8px);
-				border-bottom: 1px solid #333;
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				padding: 0 16px;
-				z-index: 200;
-			}
-
-			/* logo in toolbar */
-			.toolbar-logo {
-				width: 28px;
-				height: 28px;
-				object-fit: contain;
-				flex-shrink: 0;
-				cursor: pointer;
-			}
-
-			/* nav buttons */
-			.nav-btn {
-				background: none;
-				border: none;
-				color: #aaa;
-				cursor: pointer;
-				font-size: 15px;
-				width: 28px;
-				height: 28px;
-				border-radius: 6px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				transition: background 0.15s, color 0.15s;
-				flex-shrink: 0;
-			}
-			.nav-btn:hover { background: #3a3a3a; color: #e8e8e8; }
-
-			/* search bar inside toolbar */
-			#sj-form {
-				flex: 1;
-				display: flex;
-			}
-
-			#sj-address {
-				width: 100%;
-				background: #2a2a2a;
-				border: 1px solid #3a3a3a;
-				border-radius: 8px;
-				padding: 8px 16px;
-				font-family: Arial, Helvetica, sans-serif;
-				font-size: 0.8rem;
-				color: #e8e8e8;
-				outline: none;
-				transition: border-color 0.2s, background 0.2s;
-				box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-			}
-			#sj-address::placeholder { color: #888; }
-			#sj-address:focus {
-				border-color: #666;
-				background: #2f2f2f;
-			}
-
-			#sj-search-engine { display: none; }
-
-			/* The iframe is created dynamically by index.js */
-			#sj-frame {
-				border: none;
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100vw;
-				height: 100vh;
-				background-color: #111;
-			}
-
-			/* page content */
-			.page-content {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				justify-content: center;
-				padding-top: 80px;
-				gap: 8px;
-			}
-
-			.logo-wrap {
-				margin-bottom: 8px;
-			}
-
-			.site-title {
-				font-size: 2.8rem;
-				font-weight: 700;
-				color: #ffffff;
-				letter-spacing: 0.02em;
-				text-align: center;
-				text-shadow: 0 4px 18px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.6);
-				margin-bottom: 0;
-			}
-
-			/* shortcuts row */
-			.shortcuts {
-				display: flex;
-				gap: 24px;
-				justify-content: center;
-				flex-wrap: wrap;
-				margin-top: 20px;
-			}
-
-			.shortcut {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				gap: 10px;
-				text-decoration: none;
-				color: #e8e8e8;
-				font-family: Arial, Helvetica, sans-serif;
-				font-size: 0.95rem;
-				letter-spacing: 0.08em;
-				transition: opacity 0.2s, transform 0.2s;
-				text-shadow: 0 2px 6px rgba(0,0,0,0.7);
-				cursor: pointer;
-				border: none;
-				background: none;
-			}
-			.shortcut:hover { opacity: 0.75; transform: translateY(-2px); }
-
-			.shortcut-icon {
-				width: 68px;
-				height: 68px;
-				border-radius: 50%;
-				background: #1a1a1a;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				overflow: hidden;
-				box-shadow: 0 6px 20px rgba(0,0,0,0.75), 0 2px 6px rgba(0,0,0,0.5);
-			}
-
-			.shortcut-icon img {
-				width: 60%;
-				height: 60%;
-				object-fit: cover;
-				border-radius: 50%;
-			}
-
-			/* error text */
-			#sj-error { color: #ff6b6b; font-family: 'AwesomeBipolar', cursive; font-size: 1.1rem; text-align: center; margin-top: 8px; }
-			#sj-error-code { color: #ff6b6b; font-size: 0.85rem; text-align: center; margin-top: 4px; }
-
-			/* bottom left watermark */
-			.watermark {
-				position: fixed;
-				bottom: 24px;
-				left: 24px;
-				font-family: 'AwesomeBipolar', cursive;
-				font-size: 0.85rem;
-				color: #555;
-				line-height: 1.6;
-			}
-
-			a {
-				text-decoration: none;
-				color: #555;
-			}
-		</style>
-	</head>
-
-	<body>
-
-		<!-- browser toolbar -->
-		<div class="toolbar">
-			<img class="toolbar-logo" src="ser.png" alt="serotonin logo" onclick="reloadpage()" title="Reload Page"/>
-			<button class="nav-btn" onclick="var f=document.getElementById('sj-frame'); if(f && f.src){ f.src=f.src; }" title="refresh">&#8635;</button>
-
-			<form id="sj-form">
-				<input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
-				<input id="sj-address" type="text" placeholder="serotonin://games" autocomplete="off" />
-			</form>
-
-		</div>
-
-		<!-- main page content (gets hidden automatically by index.js on submit) -->
-		<div class="page-content">
-			<div class="logo-wrap">
-				<img src="ser.png" width="120" alt="serotonin logo" />
-			</div>
-
-			<h1 class="site-title">games</h1>
-
-			<!-- games grid (uses exact shortcuts layout of index.html) -->
-			<div class="shortcuts">
-                <button class="shortcut" onclick="document.getElementById('sj-address').value='https://forms.gle/G2HHWYdSmZy2KQPd8'; document.getElementById('sj-form').dispatchEvent(new Event('submit'));">
-					<div class="shortcut-icon">
-						<img src="form.png" alt="google form" />
-					</div>
-					<span>suggest games</span>
-				</button>
-				<button class="shortcut" onclick="document.getElementById('sj-address').value='https://www.coolmathgames.com/'; document.getElementById('sj-form').dispatchEvent(new Event('submit'));">
-					<div class="shortcut-icon">
-						<img src="cmg.ico" alt="coolmathgames" />
-					</div>
-					<span>coolmathgames</span>
-				</button>
-                <button class="shortcut" onclick="document.getElementById('sj-address').value='https://orteil.dashnet.org/cookieclicker/'; document.getElementById('sj-form').dispatchEvent(new Event('submit'));">
-					<div class="shortcut-icon">
-						<img src="cc.png" alt="cookie clicker" />
-					</div>
-					<span>cookie clicker</span>
-				</button>
-			</div>
-
-			<div style="text-align:center;">
-				<p id="sj-error"></p>
-				<pre id="sj-error-code"></pre>
-			</div>
-		</div>
-
-		<!-- bottom left watermark -->
-		<div class="watermark">
-			<div><a href="index.html">serotonin</a></div>
-			<div><a href="https://github.com/MercuryWorkshop/scramjet/">scramjet</a> · <a href="https://mercurywork.shop/">mercury workshop</a> · <a href="credits.html">credits</a> · <a href="settings.html">settings</a></div>
-		</div>
-
-<!-- EXACT LOGIC BLOCKS FROM INDEX.HTML (Slightly adjusted to accept games.html) -->
-<script>
-    // 1. Apply Tab Cloaking Disguise
-    const savedTitle = localStorage.getItem('tabTitle');
-    const savedIcon = localStorage.getItem('tabIcon');
-    if (savedTitle) document.title = savedTitle;
-    if (savedIcon) {
-        let link = document.querySelector("link[rel~='icon']");
-        if (link) link.href = savedIcon;
-    }
-
-    // 2. Set the Search Engine for the form
-    const savedEngine = localStorage.getItem('searchEngine');
-    if (savedEngine) {
-        document.getElementById('sj-search-engine').value = savedEngine;
-    }
-
-    // 3. Panic Key
-    document.addEventListener('keydown', function(e) {
-        const panicKey = localStorage.getItem('panicKey');
-        if (panicKey && e.key === panicKey) {
-            window.location.href = 'https://www.google.com';
-        }
-    });
-</script>
-
-<script>
-	(function() {
-    // 1. Apply Cloak instantly
-    const savedTitle = localStorage.getItem('tabTitle');
-    const savedIcon = localStorage.getItem('tabIcon');
-    if (savedTitle) document.title = savedTitle;
-    if (savedIcon) {
-        let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-        link.type = 'image/x-icon'; link.rel = 'shortcut icon'; link.href = savedIcon;
-        document.getElementsByTagName('head')[0].appendChild(link);
-    }
-
-    // 2. Panic Key Logic
-    document.addEventListener('keydown', function(e) {
-        if (window.location.pathname.includes('settings.html')) return;
+    <style>
+        @font-face { font-family: 'AwesomeBipolar'; src: url('AwesomeBi_polar-Regular.ttf') format('truetype'); }
         
-        const panicKey = localStorage.getItem('panicKey');
-        const panicUrl = localStorage.getItem('panicUrl') || 'https://google.com';
-        if (panicKey && e.key === panicKey) {
-            window.location.href = panicUrl;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            background-image: url('bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: #1e1e1e;
+            font-family: 'AwesomeBipolar', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 100px;
+            overflow-x: hidden;
         }
-    });
 
-    // 3. Auto About:Blank Cloak (Advanced)
-    const autoCloak = localStorage.getItem('autoCloak');
-    if (autoCloak === 'ab' && window.self === window.top && !window.location.pathname.includes('settings.html')) {
-        let win = window.open();
-        if (win) {
-            win.document.body.style.margin = '0';
-            win.document.body.style.height = '100vh';
-            let iframe = win.document.createElement('iframe');
-            iframe.style.border = 'none'; iframe.style.width = '100%'; iframe.style.height = '100%';
-            iframe.src = window.location.href;
-            win.document.body.appendChild(iframe);
-            window.location.replace("https://google.com");
+        .nav-pill {
+            position: fixed; top: 30px; display: flex; align-items: center;
+            background: #000; padding: 10px 25px; border-radius: 50px; gap: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000;
+            border: 1px solid #111;
         }
-    }
-})();
-</script>
+        .nav-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
+        .nav-btn:hover { transform: scale(1.1); }
+        .nav-logo { width: 32px; height: 32px; border-radius: 50%; }
 
-<script>
-// Function to update the search bar text based on current state
-function syncAddressBar() {
-    const addressBar = document.getElementById('sj-address');
-    if (!addressBar) return;
+        .page-content {
+            text-align: center; width: 100%; max-width: 1100px; padding: 20px;
+        }
+        .site-title { font-size: 5rem; color: #fff; margin-bottom: 5px; }
 
-    const path = window.location.pathname;
-    const isHomeVisible = document.querySelector('.page-content')?.style.display !== 'none';
+        #games {
+            width: 100%;
+            margin-top: 20px;
+        }
 
-    if (path.includes('settings.html')) {
-        addressBar.value = 'serotonin://settings';
-    } else if (path.includes('games.html')) {
-        if (isHomeVisible) addressBar.value = 'serotonin://games';
-    } else if (path.endsWith('/') || path.includes('index.html')) {
-        if (isHomeVisible) addressBar.value = 'serotonin://home';
-    }
-}
+        .desc {
+            font-family: Arial; 
+            font-size: 1.4rem; 
+            color: rgba(255, 255, 255, 0.4); /* Reduced opacity for that "aesthetic" look */
+            margin-bottom: 40px; 
+            font-weight: 300; 
+        }
+    </style>
 
-// Intercept search bar submissions
-document.getElementById('sj-form').addEventListener('submit', function(e) {
-    const input = document.getElementById('sj-address').value.trim().toLowerCase();
-    
-    if (input === 'serotonin://home') {
-        e.preventDefault();
-        window.location.href = 'index.html';
-    } else if (input === 'serotonin://settings') {
-        e.preventDefault();
-        window.location.href = 'settings.html';
-    } else if (input === 'serotonin://games') {
-        e.preventDefault();
-        const frame = document.getElementById('sj-frame');
-        if (frame) frame.style.display = 'none';
-        document.querySelector('.page-content').style.display = 'flex';
-        syncAddressBar();
-    }
+    <script src="/scram/scramjet.all.js"></script>
+    <script src="/baremux/index.js"></script>
+    <script src="register-sw.js" defer></script>
+    <script src="search.js" defer></script>
+    <script src="index.js" defer></script>
+</head>
+<body>
+
+    <div class="nav-pill">
+        <a href="index.html" class="nav-btn"><img src="ser.png" class="nav-logo"></a>
+        <a href="games.html" class="nav-btn"><i class="fa-solid fa-gamepad"></i></a>
+        <a href="apps.html" class="nav-btn"><i class="fa-solid fa-table-cells"></i></a>
+        <button class="nav-btn" onclick="go('https://indica.bond/')"><i class="fa-solid fa-film"></i></button>
+        <button class="nav-btn" onclick="go('https://monochrome.tf')"><i class="fa-solid fa-music"></i></button>
+        <a href="settings.html" class="nav-btn"><i class="fa-solid fa-gear"></i></a>
+    </div>
+
+    <div class="page-content">
+        <h1 class="site-title">games</h1>
+        <h1 class="desc">browse our selection of over 1000 games, powered by luminSDK!</h1>
+        <div id="games"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/gh/luminsdk/script@latest/lumin.min.js"></script>
+    <script>
+        Lumin.init({
+  container: '#games',
+  theme: 'dark',
+  columns: 12,
+  rows: 8,
+  gamesPerPage: 96,
+  showCatagories: true,
+  showRandom: false,
 });
 
-window.addEventListener('load', syncAddressBar);
-</script>
-
-<script>
-(function() {
-    const addressBar = document.getElementById('sj-address');
-    const form = document.getElementById('sj-form');
-    const frame = document.getElementById('sj-frame');
-    const content = document.querySelector('.page-content');
-
-    // 1. Handle Navigation & Protocols
-    form.addEventListener('submit', function(e) {
-        const val = addressBar.value.trim().toLowerCase();
-        
-        if (val === 'serotonin://home') {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            window.location.href = 'index.html';
-        } 
-        else if (val === 'serotonin://settings') {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            window.location.href = 'settings.html';
+        function go(url) {
+            window.location.href = 'iframe.html?url=' + encodeURIComponent(url);
         }
-        else if (val === 'serotonin://games') {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            if (frame) frame.style.display = 'none';
-            if (content) content.style.display = 'flex';
-            addressBar.value = 'serotonin://games';
+
+        const savedTitle = localStorage.getItem('tabTitle');
+        const savedIcon = localStorage.getItem('tabIcon');
+        if (savedTitle) document.title = savedTitle;
+        if (savedIcon) {
+            let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.href = savedIcon; document.head.appendChild(link);
         }
-    }, true); // The "true" here ensures this runs BEFORE other scripts
-
-    function syncBar() {
-        if (!frame || frame.style.display === 'none') {
-            if (window.location.pathname.includes('games.html')) {
-                addressBar.value = 'serotonin://games';
-            } else {
-                addressBar.value = 'serotonin://home';
-            }
-        }
-    }
-
-    window.addEventListener('load', syncBar);
-    window.syncAddressBar = syncBar;
-})();
-</script>
-
-<script>
-	function reloadpage() {
-		location.reload()
-	}
-</script>
-	</body>
+    </script>
+</body>
 </html>

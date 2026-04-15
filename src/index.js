@@ -57,7 +57,11 @@ fastify.register(fastifyStatic, {
 	prefix: "/baremux/",
 	decorateReply: false,
 });
-
+fastify.get('/api/games', async (req, reply) => {
+    const response = await fetch('https://luminsdk.com/api/games.json');
+    const data = await response.json();
+    return reply.send(data);
+});
 fastify.setNotFoundHandler((res, reply) => {
 	return reply.code(404).type("text/html").sendFile("404.html");
 });

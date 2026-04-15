@@ -26,87 +26,62 @@
             overflow: hidden;
         }
 
-        /* --- LOGIN SCREEN OVERLAY --- */
+        /* --- SIMPLE THEMED LOGIN OVERLAY --- */
         #login-screen {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: #000;
+            background: #1e1e1e;
+            background-image: url('bg.png');
+            background-size: cover;
+            background-position: center;
             z-index: 10000;
-            display: none; /* Controlled by JS */
+            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #fff;
-            text-align: center;
+            transition: opacity 0.5s ease, visibility 0.5s;
         }
 
-        .login-logo {
-            font-size: 5rem;
-            margin-bottom: 5px;
-            color: #fff;
-            opacity: 0.9;
-        }
-
-        .login-text {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 1.4rem;
-            margin-bottom: 25px;
-            color: #e8e8e8;
-            font-weight: 300;
-        }
-
-        .login-form {
+        .login-pill {
+            width: 100%;
+            max-width: 380px;
+            background: #000;
+            border-radius: 50px;
+            padding: 8px 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 50px;
+            border: 1px solid #111;
         }
 
         .login-input {
-            background: #1a1a1a;
-            border: 1px solid #222;
+            width: 100%;
+            background: transparent;
+            border: none;
             outline: none;
-            padding: 12px 25px;
-            border-radius: 50px;
             color: #fff;
-            width: 320px;
             font-size: 1.1rem;
             font-family: Arial, sans-serif;
+            padding: 10px;
+            text-align: center;
         }
 
-        .login-submit {
-            background: #1a1a1a;
-            border: 1px solid #222;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            color: #fff;
+        .login-btn {
+            background: none;
+            border: none;
+            color: #333;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-size: 1.2rem;
             transition: 0.2s;
         }
-        .login-submit:hover { background: #333; }
+        .login-btn:hover { color: #fff; }
 
-        .login-image {
-            width: 300px;
-            height: auto;
-            margin-top: 20px;
-        }
-
-        /* --- BASIC STATIC LOADER --- */
-        #basic-loader {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-        .spinner {
-            font-size: 3rem;
-            color: #fff;
+        /* Hide logic */
+        .logged-in #login-screen {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
 
         /* --- MAIN SITE UI --- */
@@ -121,7 +96,15 @@
 
         .page-content { text-align: center; width: 100%; max-width: 650px; margin-top: -40px; }
         .site-title { font-size: 5rem; color: #fff; margin-bottom: 5px; text-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .random-msg { font-family: Arial; font-size: 1.4rem; color: #fff; margin-bottom: 40px; font-weight: 300; }
+        
+        /* Lower opacity paragraph text */
+        .random-msg { 
+            font-family: Arial; 
+            font-size: 1.4rem; 
+            color: rgba(255, 255, 255, 0.4); /* Reduced opacity for that "aesthetic" look */
+            margin-bottom: 40px; 
+            font-weight: 300; 
+        }
 
         .search-pill {
             width: 100%; background: #000; border-radius: 50px;
@@ -132,31 +115,18 @@
 </head>
 <body>
 
-    <!-- Login Screen -->
+    <!-- Simplified Login -->
     <div id="login-screen">
-        <div id="form-container">
-            <h1 class="login-logo">serotonin</h1>
-            <p class="login-text">please enter the password to enter.</p>
-            
-            <form class="login-form" id="login-form">
-                <input type="password" class="login-input" placeholder="password..." id="password-input" autocomplete="off">
-                <button type="submit" class="login-submit">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </button>
-            </form>
-        </div>
-
-        <!-- Normal Basic Loading Thing -->
-        <div id="basic-loader">
-            <i class="fa-solid fa-circle-notch fa-spin spinner"></i>
-            <p style="font-family: Arial; font-size: 1rem; color: #aaa;">loading...</p>
-        </div>
-
-        <!-- The Smiley Image -->
-        <img src="ser.png" class="login-image" alt="serotonin">
+        <h1 class="site-title" style="margin-bottom: 25px;">serotonin</h1>
+        <form class="login-pill" id="login-form">
+            <input type="password" class="login-input" placeholder="enter password..." id="password-input" autocomplete="off">
+            <button type="submit" class="login-btn">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </form>
     </div>
 
-    <!-- Main Navigation (Site Content) -->
+    <!-- Main Navigation -->
     <div class="nav-pill">
         <button class="nav-btn" onclick="location.reload()"><img src="ser.png" class="nav-logo"></button>
         <a href="games.html" class="nav-btn"><i class="fa-solid fa-gamepad"></i></a>
@@ -177,12 +147,10 @@
     </div>
 
     <script>
-        // --- LOGIN & LOADER LOGIC ---
-        const SITE_PASSWORD = "bolas"; // SET YOUR PASSWORD HERE
+        // --- CONFIG ---
+        const SITE_PASSWORD = "bolas"; 
         
         const loginScreen = document.getElementById('login-screen');
-        const formContainer = document.getElementById('form-container');
-        const basicLoader = document.getElementById('basic-loader');
         const loginForm = document.getElementById('login-form');
         const passInput = document.getElementById('password-input');
 
@@ -191,37 +159,26 @@
             const now = Date.now();
             const fiveHours = 5 * 60 * 60 * 1000;
 
-            if (!lastLogin || (now - lastLogin) > fiveHours) {
-                loginScreen.style.display = 'flex';
-            } else {
-                loginScreen.style.display = 'none';
+            if (lastLogin && (now - lastLogin) < fiveHours) {
+                document.body.classList.add('logged-in');
             }
         }
 
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             if (passInput.value === SITE_PASSWORD) {
-                // Correct Password: Hide the form and show the basic loader
-                formContainer.style.display = 'none';
-                basicLoader.style.display = 'flex';
-                
-                // Save login time
                 localStorage.setItem('lastLoginTime', Date.now());
-
-                // Briefly show loader then enter site
-                setTimeout(() => {
-                    loginScreen.style.display = 'none';
-                }, 1500); 
-
+                document.body.classList.add('logged-in');
             } else {
-                alert("Incorrect Password");
                 passInput.value = "";
+                passInput.placeholder = "incorrect.";
+                setTimeout(() => { passInput.placeholder = "enter password..."; }, 1500);
             }
         });
 
         checkAccess();
 
-        // Dashboard logic
+        // Dashboard phrases
         const phrases = ["the web, but faster.", "welcome home.", "unblock your potential.", "serotonin is all you need."];
         document.getElementById('msg').innerText = phrases[Math.floor(Math.random() * phrases.length)];
 
