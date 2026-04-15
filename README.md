@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/floams/serotonin/public/ser.png" height="200"></p>
+<p align="center"><img src="https://github.com/floams/serotonin/blob/main/public/ser.png?raw=true" height="200"></p>
 
 <h1>serotonin</h1>
 <p>a cool little proxy, made with scramjet!</p>
