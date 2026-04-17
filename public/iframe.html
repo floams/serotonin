@@ -21,8 +21,8 @@
         .hover-trigger {
             position: fixed;
             bottom: 0;
-            left: 0;
-            width: 100%;
+            left: 670px;
+            width: 560px;
             height: 60px; /* Large area at bottom to trigger the UI */
             z-index: 9999;
         }
@@ -122,7 +122,7 @@
         <div class="url-capsule">
             <img src="ser.png" class="url-logo" onclick="location.href='index.html'" title="Return Home">
             <form id="sj-form">
-                <input id="sj-search-engine" value="https://www.google.com/search?q=%s" type="hidden" />
+                <input id="sj-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
                 <input id="sj-address" type="text" placeholder="https://url" autocomplete="off" />
             </form>
         </div>
@@ -189,6 +189,17 @@
             let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
             link.href = savedIcon; document.head.appendChild(link);
         }
+
+        // Panic
+        window.addEventListener('keydown', (e) => {
+        const panicKey = localStorage.getItem('panicKey');
+        const panicUrl = localStorage.getItem('panicUrl') || 'https://google.com';
+    
+         // Check if the key pressed matches the saved panic key
+        if (panicKey && e.key === panicKey) {
+        window.location.href = panicUrl;
+        }
+        });
     </script>
 </body>
 </html>

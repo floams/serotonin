@@ -129,10 +129,11 @@
     <!-- Main Navigation -->
     <div class="nav-pill">
         <button class="nav-btn" onclick="location.reload()"><img src="ser.png" class="nav-logo"></button>
-        <a href="games.html" class="nav-btn"><i class="fa-solid fa-gamepad"></i></a>
-        <a href="apps.html" class="nav-btn"><i class="fa-solid fa-table-cells"></i></a>
-        <button class="nav-btn" onclick="go('https://indica.bond/')"><i class="fa-solid fa-film"></i></button>
-        <button class="nav-btn" onclick="go('https://monochrome.tf')"><i class="fa-solid fa-music"></i></button>
+        <a href="games.html" class="nav-btn"><img src="games.png" style width="32"></a>
+        <a href="apps.html" class="nav-btn"><img src="apps.png" style width="32"></a>
+		<a href="kajigs/exploits.html" class="nav-btn"><img src="exploit.png" style width="32"></a>
+        <button class="nav-btn" onclick="go('https://indica.bond/')"><img src="watch.png" style width="32"></button>
+        <button class="nav-btn" onclick="go('https://monochrome.tf')"><img src="music.png" style width="32"></button>
         <a href="settings.html" class="nav-btn"><i class="fa-solid fa-gear"></i></a>
     </div>
 
@@ -179,7 +180,7 @@
         checkAccess();
 
         // Dashboard phrases
-        const phrases = ["fuck you contentkeeper", "github.com/floams/serotonin 👀", "the best unblocker of 2026?", "you are such a bully."];
+        const phrases = ["where you hiding where you goin' need that serotoninn"];
         document.getElementById('msg').innerText = phrases[Math.floor(Math.random() * phrases.length)];
 
         function go(url) {
@@ -200,6 +201,17 @@
             let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
             link.href = savedIcon; document.head.appendChild(link);
         }
+
+        // Panic
+        window.addEventListener('keydown', (e) => {
+        const panicKey = localStorage.getItem('panicKey');
+        const panicUrl = localStorage.getItem('panicUrl') || 'https://google.com';
+    
+         // Check if the key pressed matches the saved panic key
+        if (panicKey && e.key === panicKey) {
+        window.location.href = panicUrl;
+        }
+        });
     </script>
 </body>
 </html>

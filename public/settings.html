@@ -25,7 +25,6 @@
             padding-top: 80px;
         }
 
-        /* Toolbar */
         .toolbar {
             position: fixed; top: 0; left: 0; right: 0; height: 52px;
             background: rgba(30, 30, 30, 0.9); backdrop-filter: blur(10px);
@@ -35,7 +34,6 @@
         .back-link { color: #aaa; text-decoration: none; font-size: 0.9rem; transition: 0.2s; }
         .back-link:hover { color: #fff; }
 
-        /* Settings Card */
         .settings-card {
             width: 90%; max-width: 650px;
             background: rgba(15, 15, 15, 0.85); backdrop-filter: blur(15px);
@@ -44,7 +42,6 @@
             margin-bottom: 40px;
         }
 
-        /* Tabs Navigation */
         .tab-nav {
             display: flex; background: rgba(0,0,0,0.3);
             border-bottom: 1px solid #333;
@@ -56,7 +53,6 @@
         }
         .tab-btn.active { color: #fff; border-bottom: 2px solid #fff; background: rgba(255,255,255,0.05); }
 
-        /* Content Area */
         .tab-content { padding: 30px; display: none; min-height: 350px; }
         .tab-content.active { display: block; }
 
@@ -78,7 +74,6 @@
         .btn:hover { background: #fff; transform: translateY(-2px); }
         .btn-cloak { background: #3a3a3a; color: #fff; margin-top: 5px; }
         
-        /* New Red Style for Logout */
         .btn-danger { background: #ff4d4d; color: #fff; margin-top: 15px; }
         .btn-danger:hover { background: #ff6666; }
 
@@ -114,29 +109,17 @@
             <button class="tab-btn" onclick="openTab(event, 'user')">User</button>
         </div>
 
-        <!-- General Tab -->
+        <!-- General Tab (Search Engine Section Removed) -->
         <div id="general" class="tab-content active">
-            <div class="section-title">Search Engine</div>
-            <div class="input-group">
-                <label>Choose your default engine:</label>
-                <select id="searchEngine">
-                    <option value="https://www.google.com/search?q=%s">Google</option>
-                    <option value="https://www.bing.com/search?q=%s">Bing</option>
-                    <option value="https://duckduckgo.com/?q=%s">DuckDuckGo</option>
-                    <option value="https://search.brave.com/search?q=%s">Brave</option>
-                </select>
-            </div>
-            
             <div class="section-title">Panic Key</div>
             <div class="input-group">
-                <label>Press key to redirect to Google:</label>
+                <label>Press key to redirect immediately:</label>
                 <input type="text" id="panicKeyInput" placeholder="Click to record..." readonly />
                 <label style="font-size: 0.7rem;">Redirect URL:</label>
                 <input type="text" id="panicUrl" placeholder="https://google.com" />
             </div>
         </div>
 
-        <!-- Tab Cloaking Tab -->
         <div id="appearance" class="tab-content">
             <div class="section-title">Visual Cloak</div>
             <div class="input-group">
@@ -160,7 +143,6 @@
             <button class="btn btn-cloak" onclick="previewCloak()">Apply Visuals</button>
         </div>
 
-        <!-- Advanced Tab -->
         <div id="advanced" class="tab-content">
             <div class="section-title">Stealth Mode</div>
             <p style="font-size: 0.8rem; color: #888; margin-bottom: 15px;">
@@ -178,7 +160,6 @@
             </div>
         </div>
 
-        <!-- NEW USER TAB -->
         <div id="user" class="tab-content">
             <div class="section-title">Current Session</div>
             <p style="font-size: 0.8rem; color: #888; margin-bottom: 10px;">Time until automatic lockout:</p>
@@ -206,7 +187,6 @@
     </div>
 
     <script>
-        // Tab System
         function openTab(evt, tabName) {
             let contents = document.getElementsByClassName("tab-content");
             for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
@@ -216,31 +196,21 @@
             evt.currentTarget.classList.add("active");
         }
 
-        // Session Management
         function updateTimer() {
             const lastLogin = parseInt(localStorage.getItem('lastLoginTime'));
             if (!lastLogin) return;
-
             const now = Date.now();
-            const fiveHours = 5 * 60 * 60 * 1000;
-            const expiry = lastLogin + fiveHours;
+            const expiry = lastLogin + (5 * 60 * 60 * 1000);
             const timeLeft = expiry - now;
 
-            if (timeLeft <= 0) {
-                logout();
-                return;
-            }
+            if (timeLeft <= 0) { logout(); return; }
 
-            const h = Math.floor(timeLeft / (1000 * 60 * 60));
-            const m = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            const h = Math.floor(timeLeft / 3600000);
+            const m = Math.floor((timeLeft % 3600000) / 60000);
+            const s = Math.floor((timeLeft % 60000) / 1000);
 
-            document.getElementById('sessionTimer').innerText = 
-                `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-            
-            // Format start time
-            const startDate = new Date(lastLogin);
-            document.getElementById('sessionStart').innerText = startDate.toLocaleTimeString();
+            document.getElementById('sessionTimer').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            document.getElementById('sessionStart').innerText = new Date(lastLogin).toLocaleTimeString();
         }
 
         function extendSession() {
@@ -254,10 +224,8 @@
             window.location.href = 'index.html';
         }
 
-        // Set interval for timer
         setInterval(updateTimer, 1000);
 
-        // Panic Key Recorder
         const panicInput = document.getElementById('panicKeyInput');
         panicInput.addEventListener('focus', () => panicInput.value = "Recording...");
         panicInput.addEventListener('keydown', (e) => {
@@ -267,7 +235,6 @@
             panicInput.blur();
         });
 
-        // Presets Logic
         function applyPreset(val) {
             const presets = {
                 google: { t: "Google", i: "https://www.google.com/favicon.ico" },
@@ -275,7 +242,6 @@
                 classroom: { t: "Classes", i: "https://www.gstatic.com/classroom/favicon.png" },
                 canvas: { t: "Dashboard", i: "https://du11hjcvx0uqb.cloudfront.net/dist/images/favicon-e10d657a73.ico" }
             };
-
             if (val === 'serotonin') {
                 document.getElementById('customTitle').value = "";
                 document.getElementById('customFavicon').value = "";
@@ -285,7 +251,6 @@
             }
         }
 
-        // About:Blank Cloaking
         function cloakAB() {
             const win = window.open();
             if (!win) return alert("Please allow popups!");
@@ -298,14 +263,8 @@
             window.location.replace("https://google.com");
         }
 
-        // Blob Cloaking
         function cloakBlob() {
-            const html = `
-                <title>${localStorage.getItem('tabTitle') || 'serotonin'}</title>
-                <link rel="icon" href="${localStorage.getItem('tabIcon') || 'favicon.webp'}">
-                <style>body,html{margin:0;padding:0;height:100%;overflow:hidden;}iframe{width:100%;height:100%;border:none;}</style>
-                <iframe src="${window.location.origin}"></iframe>
-            `;
+            const html = `<title>${localStorage.getItem('tabTitle') || 'serotonin'}</title><link rel="icon" href="${localStorage.getItem('tabIcon') || 'favicon.webp'}"><style>body,html{margin:0;padding:0;height:100%;overflow:hidden;}iframe{width:100%;height:100%;border:none;}</style><iframe src="${window.location.origin}"></iframe>`;
             const blob = new Blob([html], { type: 'text/html' });
             window.location.href = URL.createObjectURL(blob);
         }
@@ -315,12 +274,11 @@
             const i = document.getElementById('customFavicon').value || "favicon.webp";
             document.title = t;
             let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-            link.type = 'image/x-icon'; link.rel = 'shortcut icon'; link.href = i;
-            document.getElementsByTagName('head')[0].appendChild(link);
+            link.rel = 'shortcut icon'; link.href = i;
+            document.head.appendChild(link);
         }
 
         function saveAll() {
-            localStorage.setItem('searchEngine', document.getElementById('searchEngine').value);
             localStorage.setItem('panicKey', document.getElementById('panicKeyInput').value);
             localStorage.setItem('panicUrl', document.getElementById('panicUrl').value || 'https://google.com');
             localStorage.setItem('tabTitle', document.getElementById('customTitle').value);
@@ -330,7 +288,6 @@
         }
 
         window.onload = () => {
-            document.getElementById('searchEngine').value = localStorage.getItem('searchEngine') || "https://www.google.com/search?q=%s";
             document.getElementById('panicKeyInput').value = localStorage.getItem('panicKey') || "";
             document.getElementById('panicUrl').value = localStorage.getItem('panicUrl') || "https://google.com";
             document.getElementById('customTitle').value = localStorage.getItem('tabTitle') || "";

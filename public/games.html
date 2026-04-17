@@ -21,88 +21,295 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 120px;
+            padding-top: 100px;
             color: white;
             overflow-x: hidden;
         }
 
+        /* --- NAVIGATION --- */
         .nav-pill {
             position: fixed; top: 30px; display: flex; align-items: center;
-            background: #000; padding: 10px 25px; border-radius: 50px; gap: 25px;
+            background: #000; padding: 10px 25px; border-radius: 50px; gap: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 1000;
             border: 1px solid #111;
         }
-        .nav-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
+        .nav-btn { background: none; border: none; color: white; cursor: pointer; display: flex; align-items: center; text-decoration: none; transition: 0.2s; }
         .nav-btn:hover { transform: scale(1.1); }
         .nav-logo { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .nav-icon { width: 28px; height: 28px; object-fit: contain; }
 
-        .page-content {
-            text-align: center; width: 100%; max-width: 1100px; padding: 20px;
-        }
+        .page-content { text-align: center; width: 100%; max-width: 1200px; padding: 20px; }
         .site-title { font-size: 5rem; color: #fff; margin-bottom: 5px; }
+        .desc { font-family: Arial, sans-serif; font-size: 1.2rem; color: rgba(255, 255, 255, 0.4); margin-bottom: 30px; }
 
-        #games {
-            width: 100%;
-            margin-top: 20px;
-            min-height: 600px;
+        .controls { display: flex; gap: 10px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }
+        #searchBar, #filterOptions {
+            padding: 12px 20px; border-radius: 25px; border: 1px solid #333;
+            background: rgba(0,0,0,0.7); color: white; outline: none; font-size: 1rem;
+        }
+        #searchBar { width: 400px; }
+
+        /* --- GAME GRID --- */
+        #container { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; width: 100%; }
+        .zone-item {
+            background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px; overflow: hidden; cursor: pointer; transition: 0.3s;
+            display: flex; flex-direction: column;
+        }
+        .zone-item:hover { transform: translateY(-8px); border-color: #fc2651; background: rgba(0,0,0,0.8); }
+        .zone-item img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #111; }
+        .zone-item button { background: transparent; color: white; border: 0; padding: 15px 10px; cursor: pointer; font-weight: 600; font-size: 14px; font-family: Arial; }
+
+        /* --- GAME VIEWER OVERLAY --- */
+        #zoneViewer {
+            position: fixed; inset: 0; background: #1e1e1e url('bg.png') no-repeat center center fixed;
+            background-size: cover;
+            z-index: 2000; display: none; flex-direction: column;
+            align-items: center; justify-content: center;
         }
 
-        .desc {
-            font-family: Arial, sans-serif; 
-            font-size: 1.4rem; 
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 40px; 
-            font-weight: 300; 
+        .viewer-wrapper {
+            width: 90%; height: 80%;
+            max-width: 1200px; position: relative;
+            display: flex; flex-direction: column;
+        }
+
+        .game-frame-container {
+            flex-grow: 1; background: #0b0b0b;
+            border-radius: 20px; overflow: hidden;
+            border: 1px solid #1a1a1a; position: relative;
+        }
+
+        #zoneFrame { width: 100%; height: 100%; border: none; }
+
+        .fullscreen-icon {
+            position: absolute; bottom: 15px; right: 15px;
+            color: white; opacity: 0.6; cursor: pointer;
+            font-size: 18px; transition: 0.2s;
+        }
+        .fullscreen-icon:hover { opacity: 1; transform: scale(1.1); }
+
+        /* --- BOTTOM CONTROL BAR (IFRAME STYLE) --- */
+        .viewer-nav-row {
+            margin-top: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        /* Center Pill (Logo + Name) */
+        .url-capsule {
+            background: rgba(18, 18, 18, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 8px 20px 8px 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 450px;
+        }
+
+        .url-logo { width: 32px; height: 32px; border-radius: 50%; }
+
+        #sj-address {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #888;
+            font-size: 0.95rem;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        /* Close Button Capsule */
+        .controls-capsule {
+            background: rgba(18, 18, 18, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 8px;
+            width: 50px; height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .controls-capsule:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.05); }
+
+        @media (max-width: 600px) {
+            .viewer-wrapper { width: 95%; height: 75%; }
+            .url-capsule { width: 70%; }
         }
     </style>
-
-    <!-- UI Scripts only -->
-    <script src="search.js" defer></script>
-    <script src="index.js" defer></script>
 </head>
 <body>
 
+    <!-- Game Viewer Overlay -->
+    <div id="zoneViewer">
+        <div class="viewer-wrapper">
+            <!-- Game Frame Area -->
+            <div class="game-frame-container">
+                <iframe id="zoneFrame"></iframe>
+                <i class="fa-solid fa-expand fullscreen-icon" onclick="toggleFullscreen()" title="Fullscreen"></i>
+            </div>
+
+            <!-- Bottom Control Bar -->
+            <div class="viewer-nav-row">
+                <!-- Center Capsule -->
+                <div class="url-capsule">
+                    <img src="ser.png" class="url-logo">
+                    <input id="sj-address" type="text" readonly value="game name" />
+                </div>
+
+                <!-- Close Capsule -->
+                <div class="controls-capsule" onclick="closeZone()" title="Close Game">
+                    <i class="fa-solid fa-xmark" style="color: white; font-size: 1.2rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
     <div class="nav-pill">
         <a href="index.html" class="nav-btn"><img src="ser.png" class="nav-logo"></a>
-        <a href="games.html" class="nav-btn"><i class="fa-solid fa-gamepad"></i></a>
-        <a href="apps.html" class="nav-btn"><i class="fa-solid fa-table-cells"></i></a>
-        <button class="nav-btn" onclick="go('https://indica.bond/')"><i class="fa-solid fa-film"></i></button>
-        <button class="nav-btn" onclick="go('https://monochrome.tf')"><i class="fa-solid fa-music"></i></button>
-        <a href="settings.html" class="nav-btn"><i class="fa-solid fa-gear"></i></a>
+        <a href="games.html" class="nav-btn"><img src="games.png" class="nav-icon"></a>
+        <a href="apps.html" class="nav-btn"><img src="apps.png" class="nav-icon"></a>
+		<a href="kajigs/exploits.html" class="nav-btn"><img src="exploit.png" class="nav-icon"></a>
+        <button class="nav-btn" onclick="go('https://indica.bond/')"><img src="watch.png" class="nav-icon"></button>
+        <button class="nav-btn" onclick="go('https://monochrome.tf')"><img src="music.png" class="nav-icon"></button>
+        <a href="settings.html" class="nav-btn"><i class="fa-solid fa-gear" style="font-size:24px;"></i></a>
     </div>
 
     <div class="page-content">
         <h1 class="site-title">games</h1>
-        <h1 class="desc">browse our selection of over 1000 games, powered by luminSDK!</h1>
-        <div id="games"></div>
+        <p class="desc" id="zoneCount">fetching from gnmath..</p>
+        
+        <div class="controls">
+            <input type="text" id="searchBar" placeholder="search for games" oninput="filterZones()">
+            <select id="filterOptions" onchange="filterByTag()">
+                <option value="none">all categories</option>
+            </select>
+        </div>
+
+        <div id="container"></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/gh/luminsdk/script@latest/lumin.min.js" crossorigin="anonymous"></script>
     <script>
-        // Init Lumin
-        Lumin.init({
-            container: '#games',
-            theme: 'dark',
-            columns: 12,
-            rows: 8,
-            gamesPerPage: 96,
-            showCatagories: true,
-            showRandom: false,
-        });
+        const container = document.getElementById('container');
+        const searchBar = document.getElementById('searchBar');
+        const filterOptions = document.getElementById('filterOptions');
+        const zoneCount = document.getElementById('zoneCount');
+        const zoneViewer = document.getElementById('zoneViewer');
+        const zoneFrame = document.getElementById('zoneFrame');
+        const pillAddress = document.getElementById('sj-address');
+
+        const coverURL = "https://cdn.jsdelivr.net/gh/freebuisness/covers@main";
+        const htmlURL = "https://cdn.jsdelivr.net/gh/freebuisness/html@main";
+        const zonesURL = "https://cdn.jsdelivr.net/gh/freebuisness/assets@main/zones.json";
+        
+        let zones = [];
+
+        async function listZones() {
+            try {
+                const response = await fetch(zonesURL + "?t=" + Date.now());
+                zones = await response.json();
+                zones.sort((a, b) => a.name.localeCompare(b.name));
+                populateTags();
+                displayZones(zones);
+                zoneCount.textContent = `browse from over ${zones.length} games`;
+            } catch (error) {
+                container.innerHTML = `<p style="color:red">games failed to fetch from gnmath, is the repository down?.</p>`;
+            }
+        }
+
+        function displayZones(zonesToDisplay) {
+            container.innerHTML = "";
+            zonesToDisplay.forEach((file) => {
+                const zoneItem = document.createElement("div");
+                zoneItem.className = "zone-item";
+                const imgPath = file.cover.replace("{COVER_URL}", coverURL).replace("{HTML_URL}", htmlURL);
+                zoneItem.innerHTML = `<img src="${imgPath}" loading="lazy" onerror="this.src='ser.png'"><button>${file.name.toLowerCase()}</button>`;
+                zoneItem.onclick = () => openZone(file);
+                container.appendChild(zoneItem);
+            });
+        }
+
+        async function openZone(file) {
+            pillAddress.value = file.name.toLowerCase();
+            
+            if (file.url.startsWith("http")) {
+                go(file.url);
+            } else {
+                const url = file.url.replace("{COVER_URL}", coverURL).replace("{HTML_URL}", htmlURL);
+                zoneViewer.style.display = "flex";
+                
+                try {
+                    const response = await fetch(url + "?t=" + Date.now());
+                    const htmlCode = await response.text();
+                    const doc = zoneFrame.contentDocument || zoneFrame.contentWindow.document;
+                    doc.open();
+                    doc.write(htmlCode);
+                    doc.close();
+                } catch (err) {
+                    alert("error loading game content.");
+                    closeZone();
+                }
+            }
+        }
+
+        function closeZone() {
+            zoneViewer.style.display = "none";
+            zoneFrame.src = "about:blank";
+        }
+
+        function toggleFullscreen() {
+            if (zoneFrame.requestFullscreen) zoneFrame.requestFullscreen();
+            else if (zoneFrame.webkitRequestFullscreen) zoneFrame.webkitRequestFullscreen();
+            else if (zoneFrame.msRequestFullscreen) zoneFrame.msRequestFullscreen();
+        }
+
+        function filterZones() {
+            const query = searchBar.value.toLowerCase();
+            displayZones(zones.filter(z => z.name.toLowerCase().includes(query)));
+        }
+
+        function populateTags() {
+            let allTags = [];
+            zones.forEach(z => { if (z.special) allTags.push(...z.special); });
+            allTags = [...new Set(allTags)];
+            allTags.forEach(tag => {
+                const opt = document.createElement("option");
+                opt.value = tag; opt.textContent = tag.toLowerCase();
+                filterOptions.appendChild(opt);
+            });
+        }
+
+        function filterByTag() {
+            const tag = filterOptions.value;
+            displayZones(tag === "none" ? zones : zones.filter(z => z.special && z.special.includes(tag)));
+        }
 
         function go(url) {
             window.location.href = 'iframe.html?url=' + encodeURIComponent(url);
         }
 
-        // Tab Cloaking
-        const savedTitle = localStorage.getItem('tabTitle');
-        const savedIcon = localStorage.getItem('tabIcon');
-        if (savedTitle) document.title = savedTitle;
-        if (savedIcon) {
-            let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-            link.href = savedIcon; 
-            document.head.appendChild(link);
+        // Panic
+        window.addEventListener('keydown', (e) => {
+        const panicKey = localStorage.getItem('panicKey');
+        const panicUrl = localStorage.getItem('panicUrl') || 'https://google.com';
+    
+         // Check if the key pressed matches the saved panic key
+        if (panicKey && e.key === panicKey) {
+        window.location.href = panicUrl;
         }
+        });
+
+        listZones();
     </script>
 </body>
 </html>
