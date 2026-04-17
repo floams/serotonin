@@ -3,10 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <title>serotonin | browsing</title>
-    <!-- FontAwesome for the arrows -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
-    <!-- CORE SCRIPTS (Required for Scramjet) -->
+    <!-- CORE SCRIPTS -->
     <script src="/scram/scramjet.all.js"></script>
     <script src="/baremux/index.js"></script>
     <script src="register-sw.js" defer></script>
@@ -17,171 +16,115 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body, html { width: 100%; height: 100%; overflow: hidden; background: #000; }
 
-        /* BOTTOM HOVER TRIGGER ZONE */
         .hover-trigger {
-            position: fixed;
-            bottom: 0;
-            left: 670px;
-            width: 560px;
-            height: 60px; /* Large area at bottom to trigger the UI */
-            z-index: 9999;
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 560px; height: 60px; z-index: 9999;
         }
 
-        /* NAVIGATION CONTAINER */
         .nav-container {
-            position: fixed;
-            bottom: -100px; /* Start hidden */
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 10000;
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 12px; z-index: 10000;
             transition: bottom 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
             opacity: 0;
         }
 
-        /* REVEAL ON HOVER */
-        .hover-trigger:hover + .nav-container, 
-        .nav-container:hover {
-            bottom: 30px;
-            opacity: 1;
+        .hover-trigger:hover + .nav-container, .nav-container:hover {
+            bottom: 30px; opacity: 1;
         }
 
-        /* URL CAPSULE */
         .url-capsule {
-            background: rgba(18, 18, 18, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
-            padding: 8px 20px 8px 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            width: 450px;
+            background: rgba(18, 18, 18, 0.85); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50px;
+            padding: 8px 20px 8px 10px; display: flex; align-items: center; gap: 15px; width: 450px;
         }
 
-        .url-logo {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
+        .url-logo { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; transition: 0.2s; }
         .url-logo:hover { opacity: 0.7; }
 
         #sj-form { flex: 1; display: flex; }
         #sj-address {
-            width: 100%;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #888;
-            font-size: 0.95rem;
-            font-family: Arial, sans-serif;
-            text-align: center;
+            width: 100%; background: transparent; border: none; outline: none;
+            color: #888; font-size: 0.95rem; font-family: Arial, sans-serif; text-align: center;
         }
 
-        /* NAVIGATION BUTTONS CAPSULE */
         .controls-capsule {
-            background: rgba(18, 18, 18, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 50px;
-            padding: 8px 20px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
+            background: rgba(18, 18, 18, 0.85); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50px;
+            padding: 8px 20px; display: flex; align-items: center; gap: 20px;
         }
 
-        .nav-ctrl-btn {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .nav-ctrl-btn:hover { color: #888; }
-
-        /* THE IFRAME */
+        .nav-ctrl-btn { background: none; border: none; color: #fff; font-size: 1.1rem; cursor: pointer; }
         #sj-frame { border: none; width: 100vw; height: 100vh; background: #000; position: absolute; top:0; left:0; }
-        
-        /* REQUIRED HIDDEN ELEMENTS FOR SCRIPTS */
         #sj-search-engine, .page-content { display: none; }
     </style>
 </head>
 <body>
 
-    <!-- Trigger Zone -->
     <div class="hover-trigger"></div>
 
-    <!-- The Nav UI -->
     <div class="nav-container">
-        <!-- Main URL Capsule -->
         <div class="url-capsule">
-            <img src="ser.png" class="url-logo" onclick="location.href='index.html'" title="Return Home">
+            <img src="ser.png" class="url-logo" onclick="location.href='index.html'">
             <form id="sj-form">
                 <input id="sj-search-engine" value="https://duckduckgo.com/?q=%s" type="hidden" />
                 <input id="sj-address" type="text" placeholder="https://url" autocomplete="off" />
             </form>
         </div>
 
-        <!-- Back/Forward Controls Capsule -->
         <div class="controls-capsule">
-            <button class="nav-ctrl-btn" onclick="historyBack()" title="Back">
-                <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <button class="nav-ctrl-btn" onclick="historyForward()" title="Forward">
-                <i class="fa-solid fa-chevron-right"></i>
-            </button>
+            <button class="nav-ctrl-btn" onclick="historyBack()"><i class="fa-solid fa-chevron-left"></i></button>
+            <button class="nav-ctrl-btn" onclick="historyForward()"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
     </div>
-
-    <!-- Hidden element often required by Scramjet scripts -->
-    <div class="page-content" style="display:none;"></div>
 
     <iframe id="sj-frame"></iframe>
 
     <script>
-        // 1. Initial Load from Query String
-        window.onload = () => {
+        // --- 1. TRANSPORT INITIALIZATION (Fixes WASM Error) ---
+        async function initTransport() {
+            try {
+                const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
+                
+                // Determine Wisp URL based on current host
+                const wispUrl = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/wisp/";
+                
+                // Set the transport to Libcurl and wait for WASM to load
+                await connection.setTransport("/libcurl/index.mjs", [{ wisp: wispUrl }]);
+                console.log("Transport initialized successfully with Libcurl.");
+            } catch (err) {
+                console.error("Failed to initialize transport:", err);
+            }
+        }
+
+        // --- 2. INITIAL LOAD ---
+        window.onload = async () => {
+            // Wait for transport first to prevent WASM error
+            await initTransport();
+
             const params = new URLSearchParams(window.location.search);
             const url = params.get('url');
             if (url) {
-                setTimeout(() => {
-                    proxy(decodeURIComponent(url));
-                }, 200);
+                proxy(decodeURIComponent(url));
             }
         };
 
-        // 2. Proxy Function
+        // --- 3. PROXY FUNCTION ---
         function proxy(url) {
             const addr = document.getElementById('sj-address');
             addr.value = url;
+            // Scramjet's script listens for this submit event
             document.getElementById('sj-form').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
         }
 
-        // 3. Navigation Controls
+        // --- 4. NAVIGATION CONTROLS ---
         function historyBack() {
-            const frame = document.getElementById('sj-frame');
-            try {
-                frame.contentWindow.history.back();
-            } catch (e) {
-                console.error("Navigation failed: ", e);
-            }
+            try { document.getElementById('sj-frame').contentWindow.history.back(); } catch (e) {}
         }
-
         function historyForward() {
-            const frame = document.getElementById('sj-frame');
-            try {
-                frame.contentWindow.history.forward();
-            } catch (e) {
-                console.error("Navigation failed: ", e);
-            }
+            try { document.getElementById('sj-frame').contentWindow.history.forward(); } catch (e) {}
         }
 
-        // 4. Tab Cloaking (re-applied for browsing)
+        // --- 5. TAB CLOAK & PANIC ---
         const savedTitle = localStorage.getItem('tabTitle');
         const savedIcon = localStorage.getItem('tabIcon');
         if (savedTitle) document.title = savedTitle;
@@ -190,15 +133,12 @@
             link.href = savedIcon; document.head.appendChild(link);
         }
 
-        // Panic
         window.addEventListener('keydown', (e) => {
-        const panicKey = localStorage.getItem('panicKey');
-        const panicUrl = localStorage.getItem('panicUrl') || 'https://google.com';
-    
-         // Check if the key pressed matches the saved panic key
-        if (panicKey && e.key === panicKey) {
-        window.location.href = panicUrl;
-        }
+            const panicKey = localStorage.getItem('panicKey');
+            const panicUrl = localStorage.getItem('panicUrl') || 'https://google.com';
+            if (panicKey && e.key === panicKey) {
+                window.location.href = panicUrl;
+            }
         });
     </script>
 </body>
